@@ -516,7 +516,7 @@
       selectedItems.forEach(item => {
         // Chia số tiền cho 1000
         const simplifiedAmount = Math.floor(item.amount / 1000);
-        description += ` ${item.code} ${simplifiedAmount}`;
+        description += ` ${item.code} ${simplifiedAmount}k`;
       });
       transactionInfo.textContent = description;
       
