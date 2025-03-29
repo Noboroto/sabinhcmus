@@ -187,7 +187,7 @@
     
     <div class="form-group">
       <label for="mssv">MSSV *</label>
-      <input type="text" id="mssv" placeholder="Nhập MSSV">
+      <input type="text" id="mssv" placeholder="Nhập MSSV" pattern="\d{2}12\d{4}">
       <div id="mssv-error" class="error"></div>
     </div>
     
@@ -232,8 +232,9 @@
   <script>
     // Danh sách các mục thanh toán
     const paymentItems = [
-      { name: "Let IT Shine 2024", code: "LIS24" },
       { name: "Giao lưu quân sự 2024", code: "QST24" },
+      { name: "Let IT Shine 2024", code: "LIS24" },
+      { name: "Ấm áp mùa đông 2024", code: "AMD24" },
       { name: "Cá voi vượt vũ môn 2024", code: "CVM24" },
       { name: "OLYMFIT 2025 - Bóng đá", code: "FTB25" },
       { name: "OLYMFIT 2025 - Bóng chuyền", code: "VLB25" },
