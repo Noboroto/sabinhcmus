@@ -251,6 +251,7 @@
   <div class="container">
     <div class="header">
       <img src="logo.png" alt="Logo" class="logo">
+    </br>
       <h1>Thu hồi tiền hoạt động SAB</h1>
     </div>
     
@@ -427,7 +428,7 @@
         mssvError.textContent = 'Vui lòng nhập MSSV';
         isValid = false;
       } else if (!mssvPattern.test(mssvInput.value.trim())) {
-        mssvError.textContent = 'MSSV không hợp lệ (phải theo định dạng: XXYYXXXX, trong đó YY=12)';
+        mssvError.textContent = 'MSSV không hợp lệ!';
         isValid = false;
       } else {
         mssvError.textContent = '';
