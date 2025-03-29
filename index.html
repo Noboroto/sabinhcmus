@@ -512,12 +512,9 @@
       totalAmountElement.textContent = new Intl.NumberFormat('vi-VN').format(totalAmount) + ' VND';
             
       // Tạo thông tin giao dịch
-      let description = `SAB ${mssv}`;
-      selectedItems.forEach(item => {
-        // Chia số tiền cho 1000
-        const simplifiedAmount = Math.floor(item.amount / 1000);
-        description += ` ${item.code} ${simplifiedAmount}k`;
-      });
+      const codes = selectedItems.map(item => item.code).join(' ');
+      const amounts = selectedItems.map(item => Math.floor(item.amount / 1000)).join('k ');
+      const description = `SAB ${mssv} ${codes} ${amounts}k`;
       transactionInfo.textContent = description;
       
       // Tạo URL cho mã QR
