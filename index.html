@@ -399,13 +399,16 @@
         
         // Format số tiền khi nhập
         amountInput.addEventListener('input', function(e) {
-          // Chỉ cho phép nhập số
-          let value = this.value.replace(/[^\d]/g, '');
-          
+          // Loại bỏ "VND" và chỉ lấy phần số
+          let value = this.value.replace(/[^0-9]/g, '');
+        
           // Format số tiền
           if (value) {
             value = parseInt(value, 10);
             this.value = new Intl.NumberFormat('vi-VN').format(value) + ' VND';
+          } else {
+            // Nếu không có số, đặt giá trị input về rỗng
+            this.value = '';
           }
         });
       });
