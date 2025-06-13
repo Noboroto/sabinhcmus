@@ -4,9 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: qr-payment-container
-    ports:
-      - "3000:80"
+    container_name: qr_tvts_container
+    expose:
+      - 80
     restart: unless-stopped
     environment:
       - NGINX_ENTRYPOINT_QUIET_LOGS=1
