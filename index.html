@@ -436,12 +436,12 @@
 				<tbody id="summary-body">
 					<!-- Kết quả sẽ được thêm vào bằng JavaScript -->
 				</tbody>
-				<tfoot>
+				<!-- <tfoot>
 					<tr>
 						<td colspan="3" data-label=""><strong>Tổng cộng</strong></td>
 						<td id="total-amount" data-label="Tổng tiền"><strong>0 VND</strong></td>
 					</tr>
-				</tfoot>
+				</tfoot> -->
 			</table>
 			<div class="description">
 				<p><strong>Số tài khoản:</strong> <span id="bank-number"></span></p>
@@ -696,7 +696,7 @@
 			const result = document.getElementById('result');
 			const summaryBody = document.getElementById('summary-body');
 			const wish = Number(document.getElementById('wish').value);
-			const totalAmountElement = document.getElementById('total-amount');
+			//const totalAmountElement = document.getElementById('total-amount');
 			const transactionInfo = document.getElementById('transaction-info');
 			const qrCode = document.getElementById('qr-code');
 
@@ -730,7 +730,7 @@
 			});
 
 			// Hiển thị tổng số tiền
-			totalAmountElement.textContent = new Intl.NumberFormat('vi-VN').format(totalAmount) + ' VND';
+			// totalAmountElement.textContent = new Intl.NumberFormat('vi-VN').format(totalAmount) + ' VND';
 
 			// Tạo thông tin giao dịch
 			const codes = selectedItems.map(item => item.code).join(' ');
