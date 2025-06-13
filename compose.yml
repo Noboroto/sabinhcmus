@@ -1,0 +1,33 @@
+
+services:
+  qr-payment-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: qr-payment-container
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    environment:
+      - NGINX_ENTRYPOINT_QUIET_LOGS=1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qr-payment.rule=Host(`localhost`)"
+      - "traefik.http.routers.qr-payment.entrypoints=web"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - qr-payment-network
+
+networks:
+  qr-payment-network:
+    driver: bridge
+
+volumes:
+  # Optional: if you want to persist logs
+  nginx_logs:
+    driver: local

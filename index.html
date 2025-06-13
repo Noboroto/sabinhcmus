@@ -301,7 +301,7 @@
 <body>
 	<div class="container">
 		<div class="header">
-			<img src="logo.png" alt="Logo" class="logo">
+			<img src="logo.png" alt="Logo" class="logo" loading="eager">
 		</div>
 		<div class="header">
 			<h1>QR lệ phí tuyển sinh</h1>
@@ -601,8 +601,7 @@
 					generateQR();
 				});
 			});
-		}
-		// Hàm tạo mã QR và hiển thị kết quả
+		}		// Hàm tạo mã QR và hiển thị kết quả
 		function generateQRCode(CCCD, totalAmount, selectedItems) {
 			const result = document.getElementById('result');
 			const summaryBody = document.getElementById('summary-body');
@@ -654,11 +653,20 @@
 
 			console.info("Description: ", description);
 
-			// Tạo URL cho mã QR
+			// Tạo URL cho mã QR với cache-busting parameter
 			const encodedDescription = description.replace(/ /g, '%20');
-			const qrUrl = `https://img.vietqr.io/image/${bankCode}-${bankNumber}-qr_only.png?amount=${totalAmount}&addInfo=${encodedDescription}`;
+			const timestamp = Date.now(); // Thêm timestamp để tránh cache
+			const qrUrl = `https://img.vietqr.io/image/${bankCode}-${bankNumber}-qr_only.png?amount=${totalAmount}&addInfo=${encodedDescription}&t=${timestamp}`;
 
-			// Hiển thị mã QR
+			// Thêm loading state và hiển thị mã QR
+			qrCode.style.opacity = '0.5';
+			qrCode.onload = function() {
+				qrCode.style.opacity = '1';
+			};
+			qrCode.onerror = function() {
+				qrCode.style.opacity = '1';
+				qrCode.alt = 'Không thể tải mã QR';
+			};
 			qrCode.src = qrUrl;
 
 			// Hiển thị kết quả
