@@ -10,10 +10,6 @@ services:
     restart: unless-stopped
     environment:
       - NGINX_ENTRYPOINT_QUIET_LOGS=1
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.qr-payment.rule=Host(`localhost`)"
-      - "traefik.http.routers.qr-payment.entrypoints=web"
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
       interval: 30s
@@ -25,7 +21,8 @@ services:
 
 networks:
   qr-payment-network:
-    driver: bridge
+    external: true
+    name: multi-domain
 
 volumes:
   # Optional: if you want to persist logs
