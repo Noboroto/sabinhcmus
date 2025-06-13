@@ -1,566 +1,537 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thu hồi tiền hoạt động</title>
-  <link rel="icon" href="favicon.png" type="image/png">
-  <style>
-    :root {
-      --primary-color: #4CAF50;
-      --primary-dark: #388E3C;
-      --primary-light: #C8E6C9;
-      --text-color: #333;
-      --error-color: #F44336;
-    }
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    body {
-      background-color: #f5f5f5;
-      color: var(--text-color);
-      line-height: 1.6;
-      padding: 20px;
-    }
-    
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    
-    .logo {
-      width: 75%;
-      max-height: 50px;
-      margin-right: 15px;
-      object-fit: contain;
-    }
-    
-    h1 {
-      text-align: center;
-      color: var(--primary-color);
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 16px;
-    }
-    
-    input:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px var(--primary-light);
-    }
-    
-    .error {
-      color: var(--error-color);
-      font-size: 14px;
-      margin-top: 5px;
-    }
-    
-    .btn {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-      width: 100%;
-      transition: background-color 0.3s;
-    }
-    
-    .btn:hover {
-      background-color: var(--primary-dark);
-    }
-    
-    .payment-options {
-      margin-bottom: 20px;
-    }
-    
-    .payment-item {
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      margin-bottom: 10px;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .payment-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    
-    .payment-header input[type="checkbox"] {
-      margin-right: 10px;
-      cursor: pointer;
-      width: 18px;
-      height: 18px;
-    }
-    
-    .payment-amount {
-      margin-left: 28px;
-      display: none;
-    }
-    
-    .payment-amount.show {
-      display: block;
-    }
-    
-    .result {
-      margin-top: 30px;
-      padding: 20px;
-      border-top: 1px solid #ddd;
-      display: none;
-    }
-    
-    .result.show {
-      display: block;
-    }
-    
-    .summary-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    
-    .summary-table th,
-    .summary-table td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    
-    .summary-table th {
-      background-color: var(--primary-light);
-    }
-    
-    .qr-container {
-      text-align: center;
-      margin-top: 20px;
-    }
-    
-    .qr-code {
-      max-width: 250px;
-      height: auto;
-    }
-    
-    .description {
-      margin-top: 20px;
-      padding: 15px;
-      background-color: #f9f9f9;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-    
-    /* Popup styles */
-    .popup {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .popup.show {
-      display: flex;
-    }
-    
-    .popup-content {
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .popup-title {
-      color: var(--error-color);
-      margin-bottom: 15px;
-    }
-    
-    .popup-message {
-      margin-bottom: 20px;
-    }
-    
-    .popup-btn {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s;
-    }
-    
-    .popup-btn:hover {
-      background-color: var(--primary-dark);
-    }
-    
-    @media (max-width: 600px) {
-      .container {
-        padding: 15px;
-      }
-      
-      .btn {
-        padding: 10px 15px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <img src="logo.png" alt="Logo" class="logo">
-    </div>
-    <div class="header">
-      <h1>Thu hồi tiền hoạt động</h1>
-    </div>
-    
-    <div class="form-group">
-      <label for="mssv">MSSV *</label>
-      <input type="text" id="mssv" placeholder="Nhập MSSV">
-      <div id="mssv-error" class="error"></div>
-    </div>
-    
-    <div class="payment-options" id="payment-options">
-      <!-- Các option sẽ được thêm vào bằng JavaScript -->
-    </div>
-    
-    <button class="btn" id="generate-btn">Tạo mã QR</button>
-    
-    <div class="result" id="result">
-      <h2>Tổng số tiền</h2>
-      <table class="summary-table" id="summary-table">
-        <thead>
-          <tr>
-            <th>Sự kiện</th>
-            <th>Mã</th>
-            <th>Số tiền</th>
-          </tr>
-        </thead>
-        <tbody id="summary-body">
-          <!-- Kết quả sẽ được thêm vào bằng JavaScript -->
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="2"><strong>Tổng cộng</strong></td>
-            <td id="total-amount"><strong>0 VND</strong></td>
-          </tr>
-        </tfoot>
-      </table>
-      
-      <div class="description">
-        <p><strong>Số tài khoản:</strong> 8881048176</p>
-        <p><strong>Ngân hàng:</strong> BIDV</p>
-        <p><strong>Thông tin giao dịch:</strong> <span id="transaction-info"></span></p>
-        <p style="color:red;">Nhập CHÍNH XÁC nội dung chuyển khoản.</p>
-      </div>
-      
-      <div class="qr-container">
-        <h3>Mã QR thanh toán</h3>
-        <img id="qr-code" class="qr-code" src="" alt="QR Code">
-      </div>
-    </div>
-  </div>
-  
-  <!-- Popup thông báo -->
-  <div id="popup" class="popup">
-    <div class="popup-content">
-      <h3 class="popup-title">Thông báo</h3>
-      <p class="popup-message" id="popup-message">Vui lòng chọn ít nhất một sự kiện</p>
-      <button class="popup-btn" id="popup-close-btn">Đóng</button>
-    </div>
-  </div>
 
-  <script>
-    // Danh sách các mục thanh toán
-    const paymentItems = [
-      { name: "Giao lưu quân sự 2024", code: "QST" },
-      { name: "Let IT Shine 2024", code: "LIS" },
-      { name: "Ấm áp mùa đông 2024", code: "AMD" },
-      { name: "Cá voi vượt vũ môn 2024", code: "CVM" },
-      { name: "OLYMFIT 2025 - Bóng đá", code: "FTB" },
-      { name: "OLYMFIT 2025 - Bóng chuyền", code: "VLB" },
-      { name: "OLYMFIT 2025 - Cầu lông", code: "BMT" },
-      { name: "OLYMFIT 2025 - Cờ", code: "CHS" }
-    ];
-    
-    // Hàm hiển thị popup
-    function showPopup(message) {
-      document.getElementById('popup-message').textContent = message;
-      document.getElementById('popup').classList.add('show');
-    }
-    
-    // Hàm ẩn popup
-    function hidePopup() {
-      document.getElementById('popup').classList.remove('show');
-    }
-    
-    // Hàm tạo các mục thanh toán
-    function renderPaymentItems() {
-      const container = document.getElementById('payment-options');
-      
-      paymentItems.forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'payment-item';
-        
-        const headerDiv = document.createElement('div');
-        headerDiv.className = 'payment-header';
-        
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.id = `checkbox-${item.code}`;
-        checkbox.dataset.code = item.code;
-        
-        const label = document.createElement('label');
-        label.htmlFor = `checkbox-${item.code}`;
-        label.textContent = `${item.name}`;
-        
-        headerDiv.appendChild(checkbox);
-        headerDiv.appendChild(label);
-        
-        const amountDiv = document.createElement('div');
-        amountDiv.className = 'payment-amount';
-        amountDiv.id = `amount-container-${item.code}`;
-        
-        const amountInput = document.createElement('input');
-        amountInput.type = 'text';
-        amountInput.id = `amount-${item.code}`;
-        amountInput.placeholder = 'Nhập số tiền (VND)';
-        amountInput.disabled = true;
-        amountInput.dataset.code = item.code;
-        amountInput.dataset.name = item.name;
-        
-        const amountError = document.createElement('div');
-        amountError.className = 'error';
-        amountError.id = `amount-error-${item.code}`;
-        
-        amountDiv.appendChild(amountInput);
-        amountDiv.appendChild(amountError);
-        
-        itemDiv.appendChild(headerDiv);
-        itemDiv.appendChild(amountDiv);
-        
-        container.appendChild(itemDiv);
-        
-        // Thêm event listener cho checkbox
-        checkbox.addEventListener('change', function() {
-          const amountContainer = document.getElementById(`amount-container-${item.code}`);
-          const amountInput = document.getElementById(`amount-${item.code}`);
-          
-          if (this.checked) {
-            amountContainer.classList.add('show');
-            amountInput.disabled = false;
-            amountInput.focus();
-          } else {
-            amountContainer.classList.remove('show');
-            amountInput.disabled = true;
-            amountInput.value = '';
-            document.getElementById(`amount-error-${item.code}`).textContent = '';
-          }
-        });
-        
-        amountInput.addEventListener('input', function(e) {
-          let value = this.value.replace(/[^0-9]/g, '');
-        
-          if (value) {
-            const numberValue = parseInt(value, 10);
-            this.numberValue = numberValue;
-            this.value = new Intl.NumberFormat('vi-VN').format(numberValue) + ' VND';
-          } else {
-            this.numberValue = 0;
-            this.value = '';
-          }
-        });
-        
-        amountInput.addEventListener('keydown', function(e) {
-          if (e.key === 'Backspace') {
-            let value = this.value.replace(/[^0-9]/g, '');
-            if (value.length > 1) {
-              value = value.slice(0, -1);
-              const numberValue = parseInt(value, 10);
-              this.numberValue = numberValue;
-              this.value = new Intl.NumberFormat('vi-VN').format(numberValue) + ' VND';
-            } else {
-              this.numberValue = 0;
-              this.value = '';
-            }
-          }
-        });
-      });
-    }
-    
-    // Hàm kiểm tra và tạo mã QR
-    function generateQR() {
-      let isValid = true;
-      let totalAmount = 0;
-      const selectedItems = [];
-      const mssvInput = document.getElementById('mssv');
-      const mssvError = document.getElementById('mssv-error');
-      const result = document.getElementById('result');
-      
-      // Ẩn kết quả trước đó khi có lỗi
-      result.classList.remove('show');
-      
-      // Kiểm tra MSSV
-      const mssvPattern = /^\d{2}12\d{4}$/;
-      if (!mssvInput.value.trim()) {
-        mssvError.textContent = 'Vui lòng nhập MSSV';
-        isValid = false;
-      } else if (!mssvPattern.test(mssvInput.value.trim())) {
-        mssvError.textContent = 'MSSV không hợp lệ!';
-        isValid = false;
-      } else {
-        mssvError.textContent = '';
-      }
-      
-      // Kiểm tra các mục đã chọn
-      let hasSelectedItems = false;
-      
-      paymentItems.forEach(item => {
-        const checkbox = document.getElementById(`checkbox-${item.code}`);
-        
-        if (checkbox.checked) {
-          hasSelectedItems = true;
-          const amountInput = document.getElementById(`amount-${item.code}`);
-          const amountError = document.getElementById(`amount-error-${item.code}`);
-          
-          // Lấy giá trị số từ chuỗi đã format
-          let amountValue = amountInput.value.replace(/[^\d]/g, '');
-          amountValue = amountValue ? parseInt(amountValue, 10) : 0;
-          
-          if (!amountValue || amountValue < 10000) {
-            amountError.textContent = 'Số tiền phải lớn hơn 10,000 VND';
-            isValid = false;
-          } else {
-            amountError.textContent = '';
-            totalAmount += amountValue;
-            selectedItems.push({
-              name: amountInput.dataset.name,
-              code: item.code,
-              amount: amountValue
-            });
-          }
-        }
-      });
-      
-      // Kiểm tra nếu không có mục nào được chọn
-      if (!hasSelectedItems) {
-        showPopup('Vui lòng chọn ít nhất một sự kiện');
-        isValid = false;
-      }
-      
-      // Nếu tất cả dữ liệu hợp lệ, tạo mã QR
-      if (isValid) {
-        generateQRCode(mssvInput.value, totalAmount, selectedItems);
-      }
-    }
-    
-    // Hàm tạo mã QR và hiển thị kết quả
-    function generateQRCode(mssv, totalAmount, selectedItems) {
-      const result = document.getElementById('result');
-      const summaryBody = document.getElementById('summary-body');
-      const totalAmountElement = document.getElementById('total-amount');
-      const transactionInfo = document.getElementById('transaction-info');
-      const qrCode = document.getElementById('qr-code');
-      
-      // Xóa dữ liệu cũ
-      summaryBody.innerHTML = '';
-      
-      // Hiển thị chi tiết các mục đã chọn
-      selectedItems.forEach(item => {
-        const row = document.createElement('tr');
-        
-        const nameCell = document.createElement('td');
-        nameCell.textContent = item.name;
-        
-        const codeCell = document.createElement('td');
-        codeCell.textContent = item.code;
-        
-        const amountCell = document.createElement('td');
-        amountCell.textContent = new Intl.NumberFormat('vi-VN').format(item.amount) + ' VND';
-        
-        row.appendChild(nameCell);
-        row.appendChild(codeCell);
-        row.appendChild(amountCell);
-        
-        summaryBody.appendChild(row);
-      });
-      
-      // Hiển thị tổng số tiền
-      totalAmountElement.textContent = new Intl.NumberFormat('vi-VN').format(totalAmount) + ' VND';
-            
-      // Tạo thông tin giao dịch
-      const codes = selectedItems.map(item => item.code).join(' ');
-      const amounts = selectedItems.map(item => Math.floor(item.amount / 1000)).join('k ');
-      const description = `SAB ${mssv} ${codes} ${amounts}k`;
-      transactionInfo.textContent = description;
-      
-      // Tạo URL cho mã QR
-      const encodedDescription = description.replace(/ /g, '%20');
-      const qrUrl = `https://img.vietqr.io/image/BIDV-8881048176-qr_only.png?amount=${totalAmount}&addInfo=${encodedDescription}`;
-      
-      // Hiển thị mã QR
-      qrCode.src = qrUrl;
-      
-      // Hiển thị kết quả
-      result.classList.add('show');
-      
-      // Cuộn trang đến kết quả
-      result.scrollIntoView({ behavior: 'smooth' });
-    }
-    
-    // Khởi tạo trang
-    document.addEventListener('DOMContentLoaded', function() {
-      // Tạo các mục thanh toán
-      renderPaymentItems();
-      
-      // Thêm event listener cho nút tạo mã QR
-      document.getElementById('generate-btn').addEventListener('click', generateQR);
-      
-      // Thêm event listener cho nút đóng popup
-      document.getElementById('popup-close-btn').addEventListener('click', hidePopup);
-    });
-  </script>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>QR lệ phí tuyển sinh</title>
+	<link rel="icon" href="favicon.png" type="image/png">
+	<style>
+		:root {
+			--primary-color: #4CAF50;
+			--primary-dark: #388E3C;
+			--primary-light: #C8E6C9;
+			--text-color: #333;
+			--error-color: #F44336;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+
+		body {
+			background-color: #f5f5f5;
+			color: var(--text-color);
+			line-height: 1.6;
+			padding: 20px;
+		}
+
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+			background-color: white;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.header {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-bottom: 20px;
+		}
+
+		.logo {
+			width: 75%;
+			max-height: 50px;
+			margin-right: 15px;
+			object-fit: contain;
+		}
+
+		h1 {
+			text-align: center;
+			color: var(--primary-color);
+		}
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		.form-row {
+			display: flex;
+			gap: 15px;
+			margin-bottom: 20px;
+		}
+
+		.form-row .form-group {
+			flex: 1;
+			margin-bottom: 0;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 8px;
+			font-weight: bold;
+		}
+
+		input[type="text"],
+		input[type="number"],
+		select {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			font-size: 16px;
+			background-color: white;
+		}
+
+		input:focus,
+		select:focus {
+			outline: none;
+			border-color: var(--primary-color);
+			box-shadow: 0 0 0 2px var(--primary-light);
+		}
+
+		.error {
+			color: var(--error-color);
+			font-size: 14px;
+			margin-top: 5px;
+		}
+
+		.btn {
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			padding: 12px 20px;
+			font-size: 16px;
+			cursor: pointer;
+			border-radius: 4px;
+			width: 100%;
+			transition: background-color 0.3s;
+		}
+
+		.btn:hover {
+			background-color: var(--primary-dark);
+		}
+
+		.result {
+			margin-top: 30px;
+			padding: 20px;
+			border-top: 1px solid #ddd;
+			display: none;
+		}
+
+		.result.show {
+			display: block;
+		}
+
+		.summary-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 20px;
+		}
+
+		.summary-table th,
+		.summary-table td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.summary-table th {
+			background-color: var(--primary-light);
+		}
+
+		.qr-container {
+			text-align: center;
+			margin-top: 20px;
+		}
+
+		.qr-code {
+			max-width: 250px;
+			height: auto;
+		}
+
+		.description {
+			margin-top: 20px;
+			padding: 15px;
+			background-color: #f9f9f9;
+			border-radius: 4px;
+			font-size: 14px;
+		}
+
+		/* Popup styles */
+		.popup {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 1000;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.popup.show {
+			display: flex;
+		}
+
+		.popup-content {
+			background-color: white;
+			padding: 20px;
+			border-radius: 8px;
+			max-width: 400px;
+			width: 90%;
+			text-align: center;
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+		}
+
+		.popup-title {
+			color: var(--error-color);
+			margin-bottom: 15px;
+		}
+
+		.popup-message {
+			margin-bottom: 20px;
+		}
+
+		.popup-btn {
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			transition: background-color 0.3s;
+		}
+
+		.popup-btn:hover {
+			background-color: var(--primary-dark);
+		}
+		@media (max-width: 600px) {
+			.container {
+				padding: 15px;
+			}
+
+			.btn {
+				padding: 10px 15px;
+			}
+
+			.form-row {
+				flex-direction: column;
+				gap: 0;
+			}
+
+			.form-row .form-group {
+				margin-bottom: 20px;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="header">
+			<img src="logo.png" alt="Logo" class="logo">
+		</div>
+		<div class="header">
+			<h1>QR lệ phí tuyển sinh</h1>
+		</div>
+		<div class="form-group">
+			<label for="fullname">Họ và tên *</label>
+			<input type="text" id="fullname" placeholder="Nhập họ và tên">
+			<div id="fullname-error" class="error"></div>
+		</div>
+		
+		<div class="form-row">
+			<div class="form-group">
+				<label for="CCCD">CCCD *</label>
+				<input type="text" id="CCCD" placeholder="Nhập CCCD">
+				<div id="CCCD-error" class="error"></div>
+			</div>
+			<div class="form-group">
+				<label for="wish">Số lượng nguyện vọng *</label>
+				<input type="number" id="wish" step="1" placeholder="Nhập số nguyện vọng">
+				<div id="wish-error" class="error"></div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="payment-select">Chọn phương thức *</label>
+			<select id="payment-select">
+				<option value="">-- Chọn phương thức --</option>
+			</select>
+			<div id="payment-error" class="error"></div>
+		</div>
+
+		<div class="result" id="result">
+			<h2>Tổng số tiền</h2>
+			<table class="summary-table" id="summary-table">
+				<thead>
+					<tr>
+						<th>Phương thức</th>
+						<th>Mã</th>
+						<th>Số nguyện vọng</th>
+						<th>Số tiền</th>
+					</tr>
+				</thead>
+				<tbody id="summary-body">
+					<!-- Kết quả sẽ được thêm vào bằng JavaScript -->
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="3"><strong>Tổng cộng</strong></td>
+						<td id="total-amount"><strong>0 VND</strong></td>
+					</tr>
+				</tfoot>
+			</table>
+
+			<div class="description">
+				<p><strong>Số tài khoản:</strong> <span id="bank-number"></span></p>
+				<p><strong>Ngân hàng:</strong> <span id="bank-name"></span></p>
+				<p><strong>Thông tin giao dịch:</strong> <span id="transaction-info"></span></p>
+				<p style="color:red;">Nhập CHÍNH XÁC nội dung chuyển khoản.</p>
+			</div>
+
+			<div class="qr-container">
+				<h3>Mã QR thanh toán</h3>
+				<img id="qr-code" class="qr-code" src="" alt="QR Code">
+			</div>
+		</div>
+	</div>
+
+	<!-- Popup thông báo -->
+	<div id="popup" class="popup">
+		<div class="popup-content">
+			<h3 class="popup-title">Thông báo</h3>
+			<p class="popup-message" id="popup-message">Vui lòng chọn phương thức</p>
+			<button class="popup-btn" id="popup-close-btn">Đóng</button>
+		</div>
+	</div>
+
+	<script>
+		const bankNumber = "6380201017313";
+		const bankName = "Ngân hàng Agribank, chi nhánh Bình Thạnh";
+		const bankCode = "Agribank";
+		document.getElementById('bank-number').textContent = bankNumber;
+		document.getElementById('bank-name').textContent = bankName;
+		// Danh sách các mục thanh toán
+		const paymentItems = [
+			{ name: "1A. XTT và UTXTT theo quy định của BGD - 301", code: "LPHS301", amount: 25000, perWish: true },
+			{ name: "1B. UTXTT theo quy định của ĐHQG-HCM - 302", code: "LPHS302", amount: 25000, perWish: false },
+			{ name: "1C. UTXT theo quy định của ĐHQG-HCM - 303", code: "LPHS303", amount: 25000, perWish: false },
+		];
+
+		function removeAccents(str) {
+				return str.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.replace(/đ/g, 'd').replace(/Đ/g, 'D');
+			}
+
+		// Hàm hiển thị popup
+		function showPopup(message) {
+			document.getElementById('popup-message').textContent = message;
+			document.getElementById('popup').classList.add('show');
+		}
+
+		// Hàm ẩn popup
+		function hidePopup() {
+			document.getElementById('popup').classList.remove('show');
+		}
+		// Hàm tạo các option cho select
+		function renderPaymentItems() {
+			const select = document.getElementById('payment-select');
+
+			paymentItems.forEach(item => {
+				const option = document.createElement('option');
+				option.value = item.code;
+				option.textContent = `${item.name} - ${new Intl.NumberFormat('vi-VN').format(item.amount)} VND${item.perWish ? ' (mỗi nguyện vọng)' : ' (mỗi thí sinh)'}`;
+				option.dataset.name = item.name;
+				option.dataset.amount = item.amount;
+				option.dataset.perWish = item.perWish;
+
+				select.appendChild(option);
+			});
+
+			// Thêm event listener cho select
+			select.addEventListener('change', function () {
+				generateQR();
+			});
+		}
+
+		// Hàm kiểm tra và tạo mã QR
+		function generateQR() {
+			let isValid = true;
+			let totalAmount = 0;
+			const selectedItems = [];
+			const CCCDInput = document.getElementById('CCCD');
+			const CCCDError = document.getElementById('CCCD-error');
+			const result = document.getElementById('result');
+
+			// // Ẩn kết quả trước đó khi có lỗi
+			result.classList.remove('show');
+
+			// Kiểm tra CCCD
+			const CCCDPattern = /\d{12}/;
+			if (!CCCDInput.value.trim()) {
+				CCCDError.textContent = 'Vui lòng nhập CCCD';
+				isValid = false;
+			} else if (!CCCDPattern.test(CCCDInput.value.trim())) {
+				CCCDError.textContent = 'CCCD không hợp lệ!';
+				isValid = false;
+			} else {
+				CCCDError.textContent = '';
+			}
+
+			// Kiểm tra họ và tên
+			const fullnameInput = document.getElementById('fullname');
+			const fullnameError = document.getElementById('fullname-error');
+			if (!fullnameInput.value.trim()) {
+				fullnameError.textContent = 'Vui lòng nhập họ và tên';
+				isValid = false;
+			} else if (fullnameInput.value.trim().split(' ').filter(word => word.length > 0).length < 2) {
+				fullnameError.textContent = 'Họ và tên phải có ít nhất 2 từ';
+				isValid = false;
+			} else {
+				const fullname = fullnameInput.value.trim();
+				const nameParts = fullname.split(' ').map(word => removeAccents(word.trim()).toLowerCase());
+				let encodeName = nameParts.map(word => word.charAt(0).toLowerCase()).join('');
+				encodeName = encodeName.slice(0, -1) + nameParts[nameParts.length - 1].toLowerCase();
+
+				fullnameError.textContent = '';
+			}
+
+			// Kiểm tra số nguyện vọng
+			const wishInput = document.getElementById('wish');
+			const wishError = document.getElementById('wish-error');
+			if (!wishInput.value.trim()) {
+				wishError.textContent = 'Vui lòng nhập số nguyện vọng';
+				isValid = false;
+			} else if (parseInt(wishInput.value) < 1) {
+				wishError.textContent = 'Số nguyện vọng phải lớn hơn 0';
+				isValid = false;
+			} else {
+				wishError.textContent = '';
+			}
+			// Kiểm tra phương thức đã chọn
+			const paymentSelect = document.getElementById('payment-select');
+			const paymentError = document.getElementById('payment-error');
+
+			if (!paymentSelect.value) {
+				paymentError.textContent = 'Vui lòng chọn sự kiện';
+				isValid = false;
+			} else {
+				paymentError.textContent = '';
+
+				// Tìm item được chọn
+				const selectedOption = paymentSelect.options[paymentSelect.selectedIndex];
+				const selectedItem = paymentItems.find(item => item.code === paymentSelect.value);
+
+				if (selectedItem) {
+					const amountValue = selectedItem.perWish ? selectedItem.amount * parseInt(document.getElementById('wish').value) : selectedItem.amount;
+					totalAmount = amountValue;
+					selectedItems.push({
+						name: selectedOption.dataset.name,
+						code: selectedItem.code,
+						amount: amountValue
+					});
+				}
+			}
+
+			// Nếu tất cả dữ liệu hợp lệ, tạo mã QR
+			if (isValid) {
+				generateQRCode(CCCDInput.value, totalAmount, selectedItems);
+			}
+		}		// Thêm event listeners cho tất cả các input để tự động generate QR
+		function addInputListeners() {
+			const inputs = ['CCCD', 'fullname', 'wish'];
+
+			inputs.forEach(inputId => {
+				const input = document.getElementById(inputId);
+				input.addEventListener('input', function () {
+					generateQR();
+				});
+			});
+		}
+		// Hàm tạo mã QR và hiển thị kết quả
+		function generateQRCode(CCCD, totalAmount, selectedItems) {
+			const result = document.getElementById('result');
+			const summaryBody = document.getElementById('summary-body');
+			const wish = Number(document.getElementById('wish').value);
+			const totalAmountElement = document.getElementById('total-amount');
+			const transactionInfo = document.getElementById('transaction-info');
+			const qrCode = document.getElementById('qr-code');
+
+			// Xóa dữ liệu cũ
+			summaryBody.innerHTML = '';
+
+			// Hiển thị chi tiết các mục đã chọn
+			selectedItems.forEach(item => {
+				console.info("Selected")
+				const row = document.createElement('tr');
+
+				const nameCell = document.createElement('td');
+				nameCell.textContent = item.name;
+
+				const codeCell = document.createElement('td');
+				codeCell.textContent = item.code;
+
+				const wishCell = document.createElement('td');
+				wishCell.textContent = wish;
+
+				const amountCell = document.createElement('td');
+				amountCell.textContent = new Intl.NumberFormat('vi-VN').format(item.amount) + ' VND';
+
+				row.appendChild(nameCell);
+				row.appendChild(codeCell);
+				row.appendChild(wishCell);
+				row.appendChild(amountCell);
+
+				summaryBody.appendChild(row);
+			});
+
+			// Hiển thị tổng số tiền
+			totalAmountElement.textContent = new Intl.NumberFormat('vi-VN').format(totalAmount) + ' VND';
+
+			// Tạo thông tin giao dịch
+			const codes = selectedItems.map(item => item.code).join(' ');
+			const fullname = fullnameInput.value.trim();
+			const nameParts = fullname.split(' ').map(word => removeAccents(word.trim()).toLowerCase());
+			let encodeName = nameParts.map(word => word.charAt(0).toLowerCase()).join('');
+			encodeName = encodeName.slice(0, -1) + nameParts[nameParts.length - 1].toLowerCase();
+			const amounts = selectedItems.map(item => Math.floor(item.amount / 1000)).join('k ');
+			const description = `${CCCD} ${encodeName} ${codes}`;
+			transactionInfo.textContent = description;
+
+			console.info("Description: ", description);
+
+			// Tạo URL cho mã QR
+			const encodedDescription = description.replace(/ /g, '%20');
+			const qrUrl = `https://img.vietqr.io/image/${bankCode}-${bankNumber}-qr_only.png?amount=${totalAmount}&addInfo=${encodedDescription}`;
+
+			// Hiển thị mã QR
+			qrCode.src = qrUrl;
+
+			// Hiển thị kết quả
+			result.classList.add('show');
+		}
+
+		// Khởi tạo trang
+		document.addEventListener('DOMContentLoaded', function () {
+			// Tạo các mục thanh toán
+			renderPaymentItems();
+			addInputListeners();
+
+			// Thêm event listener cho nút đóng popup
+			document.getElementById('popup-close-btn').addEventListener('click', hidePopup);
+		});
+	</script>
 </body>
+
 </html>
