@@ -56,6 +56,7 @@
 			text-align: center;
 			color: var(--primary-color);
 		}
+
 		.form-group {
 			margin-bottom: 20px;
 		}
@@ -210,6 +211,7 @@
 			font-size: 16px;
 			transition: background-color 0.3s;
 		}
+
 		.popup-btn:hover {
 			background-color: var(--primary-dark);
 		}
@@ -280,7 +282,9 @@
 			.form-row {
 				flex-direction: column;
 				gap: 0;
-			}			.form-row .form-group {
+			}
+
+			.form-row .form-group {
 				margin-bottom: 20px;
 			}
 
@@ -293,6 +297,91 @@
 				width: 100%;
 				justify-content: center;
 				margin-top: 8px;
+			}
+
+			/* Responsive table styles */
+			.summary-table {
+				font-size: 14px;
+			}
+
+			.summary-table th,
+			.summary-table td {
+				padding: 8px 4px;
+				font-size: 12px;
+			}
+
+			/* Stack table layout for very small screens */
+			.summary-table thead {
+				display: none;
+			}
+
+			.summary-table,
+			.summary-table tbody,
+			.summary-table tr,
+			.summary-table td {
+				display: block;
+				width: 100%;
+			}
+
+			.summary-table tr {
+				border: 1px solid #ddd;
+				margin-bottom: 10px;
+				padding: 10px;
+				border-radius: 4px;
+				background-color: #f9f9f9;
+			}
+
+			.summary-table td {
+				border: none;
+				border-bottom: 1px solid #eee;
+				position: relative;
+				padding: 8px 0 8px 50%;
+				text-align: left;
+			}
+
+			.summary-table td:last-child {
+				border-bottom: none;
+			}
+
+			.summary-table td:before {
+				content: attr(data-label) ": ";
+				position: absolute;
+				left: 0;
+				width: 45%;
+				padding-right: 10px;
+				white-space: nowrap;
+				font-weight: bold;
+				color: var(--primary-color);
+			}
+
+			.summary-table tfoot tr {
+				background-color: var(--primary-light);
+				border: 2px solid var(--primary-color);
+			}
+
+			.summary-table tfoot td {
+				font-weight: bold;
+				font-size: 14px;
+			}
+		}
+
+		/* Medium screens - horizontal scroll fallback */
+		@media (max-width: 768px) and (min-width: 601px) {
+			.summary-table {
+				font-size: 14px;
+				min-width: 500px;
+				margin: 0 auto;
+			}
+
+			.result {
+				overflow-x: auto;
+				padding: 15px;
+			}
+
+			.summary-table th,
+			.summary-table td {
+				padding: 8px 6px;
+				white-space: nowrap;
 			}
 		}
 	</style>
@@ -311,7 +400,7 @@
 			<input type="text" id="fullname" placeholder="Nhập họ và tên">
 			<div id="fullname-error" class="error"></div>
 		</div>
-		
+
 		<div class="form-row">
 			<div class="form-group">
 				<label for="CCCD">CCCD *</label>
@@ -349,11 +438,12 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="3"><strong>Tổng cộng</strong></td>
-						<td id="total-amount"><strong>0 VND</strong></td>
+						<td colspan="3" data-label=""><strong>Tổng cộng</strong></td>
+						<td id="total-amount" data-label="Tổng tiền"><strong>0 VND</strong></td>
 					</tr>
 				</tfoot>
-			</table>			<div class="description">
+			</table>
+			<div class="description">
 				<p><strong>Số tài khoản:</strong> <span id="bank-number"></span></p>
 				<p><strong>Ngân hàng:</strong> <span id="bank-name"></span></p>
 				<p><strong>Thông tin giao dịch:</strong></p>
@@ -391,16 +481,16 @@
 		document.getElementById('bank-name').textContent = bankName;
 		// Danh sách các mục thanh toán
 		const paymentItems = [
-			{ name: "1A. XTT và UTXTT theo quy định của BGD - 301", code: "LPHS301", amount: 25000, perWish: true },
+			{ name: "1A. XTT và UTXTT theo quy định của BGD - 301", code: "LPXT301", amount: 25000, perWish: true },
 			{ name: "1B. UTXTT theo quy định của ĐHQG-HCM - 302", code: "LPHS302", amount: 25000, perWish: false },
 			{ name: "1C. UTXT theo quy định của ĐHQG-HCM - 303", code: "LPHS303", amount: 25000, perWish: false },
 		];
 
 		function removeAccents(str) {
-				return str.normalize('NFD')
-					.replace(/[\u0300-\u036f]/g, '')
-					.replace(/đ/g, 'd').replace(/Đ/g, 'D');
-			}
+			return str.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '')
+				.replace(/đ/g, 'd').replace(/Đ/g, 'D');
+		}
 
 		// Hàm hiển thị popup
 		function showPopup(message) {
@@ -417,7 +507,7 @@
 			const copyBtn = document.getElementById('copy-btn');
 			const copyText = copyBtn.querySelector('.copy-text');
 			const copyIcon = copyBtn.querySelector('.copy-icon');
-			
+
 			// Thử sử dụng Clipboard API trước
 			if (navigator.clipboard && window.isSecureContext) {
 				navigator.clipboard.writeText(text).then(() => {
@@ -425,7 +515,7 @@
 					copyBtn.classList.add('copied');
 					copyIcon.textContent = '✓';
 					copyText.textContent = 'Đã sao chép!';
-					
+
 					// Reset sau 2 giây
 					setTimeout(() => {
 						copyBtn.classList.remove('copied');
@@ -447,26 +537,26 @@
 			const copyBtn = document.getElementById('copy-btn');
 			const copyText = copyBtn.querySelector('.copy-text');
 			const copyIcon = copyBtn.querySelector('.copy-icon');
-			
+
 			const textArea = document.createElement("textarea");
 			textArea.value = text;
-			
+
 			// Tránh cuộn trang
 			textArea.style.top = "0";
 			textArea.style.left = "0";
 			textArea.style.position = "fixed";
-			
+
 			document.body.appendChild(textArea);
 			textArea.focus();
 			textArea.select();
-			
+
 			try {
 				const successful = document.execCommand('copy');
 				if (successful) {
 					copyBtn.classList.add('copied');
 					copyIcon.textContent = '✓';
 					copyText.textContent = 'Đã sao chép!';
-					
+
 					setTimeout(() => {
 						copyBtn.classList.remove('copied');
 						copyIcon.textContent = '📋';
@@ -484,7 +574,7 @@
 					copyText.textContent = 'Sao chép';
 				}, 2000);
 			}
-			
+
 			document.body.removeChild(textArea);
 		}
 		// Hàm tạo các option cho select
@@ -611,24 +701,26 @@
 			const qrCode = document.getElementById('qr-code');
 
 			// Xóa dữ liệu cũ
-			summaryBody.innerHTML = '';
-
-			// Hiển thị chi tiết các mục đã chọn
+			summaryBody.innerHTML = '';			// Hiển thị chi tiết các mục đã chọn
 			selectedItems.forEach(item => {
 				console.info("Selected")
 				const row = document.createElement('tr');
 
 				const nameCell = document.createElement('td');
 				nameCell.textContent = item.name;
+				nameCell.setAttribute('data-label', 'Phương thức');
 
 				const codeCell = document.createElement('td');
 				codeCell.textContent = item.code;
+				codeCell.setAttribute('data-label', 'Mã');
 
 				const wishCell = document.createElement('td');
 				wishCell.textContent = wish;
+				wishCell.setAttribute('data-label', 'Số nguyện vọng');
 
 				const amountCell = document.createElement('td');
 				amountCell.textContent = new Intl.NumberFormat('vi-VN').format(item.amount) + ' VND';
+				amountCell.setAttribute('data-label', 'Số tiền');
 
 				row.appendChild(nameCell);
 				row.appendChild(codeCell);
@@ -660,10 +752,10 @@
 
 			// Thêm loading state và hiển thị mã QR
 			qrCode.style.opacity = '0.5';
-			qrCode.onload = function() {
+			qrCode.onload = function () {
 				qrCode.style.opacity = '1';
 			};
-			qrCode.onerror = function() {
+			qrCode.onerror = function () {
 				qrCode.style.opacity = '1';
 				qrCode.alt = 'Không thể tải mã QR';
 			};
@@ -682,7 +774,7 @@
 			document.getElementById('popup-close-btn').addEventListener('click', hidePopup);
 
 			// Thêm event listener cho nút sao chép
-			document.getElementById('copy-btn').addEventListener('click', function() {
+			document.getElementById('copy-btn').addEventListener('click', function () {
 				const transactionInfo = document.getElementById('transaction-info').textContent;
 				if (transactionInfo.trim()) {
 					copyToClipboard(transactionInfo);
