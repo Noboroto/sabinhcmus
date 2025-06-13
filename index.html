@@ -703,7 +703,6 @@
 			// Xóa dữ liệu cũ
 			summaryBody.innerHTML = '';			// Hiển thị chi tiết các mục đã chọn
 			selectedItems.forEach(item => {
-				console.info("Selected")
 				const row = document.createElement('tr');
 
 				const nameCell = document.createElement('td');
@@ -742,8 +741,6 @@
 			const amounts = selectedItems.map(item => Math.floor(item.amount / 1000)).join('k ');
 			const description = `${CCCD} ${encodeName} ${codes}`;
 			transactionInfo.textContent = description;
-
-			console.info("Description: ", description);
 
 			// Tạo URL cho mã QR với cache-busting parameter
 			const encodedDescription = description.replace(/ /g, '%20');
