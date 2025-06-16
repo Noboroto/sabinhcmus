@@ -493,10 +493,10 @@
 		document.getElementById('bank-name').textContent = bankName;
 		document.getElementById('account-name').textContent = accountName;
 		document.getElementById('copy-btn').addEventListener('click', function () {
-			copyToClipboard(bankNumber);
+			copyToClipboard(bankNumber, 'copy-btn');
 		});
 		document.getElementById('copy-banknumber-btn').addEventListener('click', function () {
-			copyToClipboard(bankNumber);
+			copyToClipboard(bankNumber, 'copy-banknumber-btn');
 		});
 		// Danh sách các mục thanh toán
 		const paymentItems = [
@@ -522,8 +522,8 @@
 		}
 
 		// Hàm sao chép text
-		function copyToClipboard(text) {
-			const copyBtn = document.getElementById('copy-btn');
+		function copyToClipboard(text, buttonId) {
+			const copyBtn = document.getElementById(buttonId || 'copy-btn');
 			const copyText = copyBtn.querySelector('.copy-text');
 			const copyIcon = copyBtn.querySelector('.copy-icon');
 
@@ -793,7 +793,7 @@
 			document.getElementById('copy-btn').addEventListener('click', function () {
 				const transactionInfo = document.getElementById('transaction-info').textContent;
 				if (transactionInfo.trim()) {
-					copyToClipboard(transactionInfo);
+					copyToClipboard(transactionInfo, 'copy-btn');
 				}
 			});
 		});
