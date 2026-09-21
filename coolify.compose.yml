@@ -1,0 +1,24 @@
+# Coolify-native variant of compose.yml.
+#
+# Two changes beyond dropping the `multi-domain` network:
+#   * `ports: 3000:80` became `expose: 80`. The running production container never
+#     published a host port — the proxy reached it on the container network — and
+#     publishing one under Coolify would both grab host port 3000 and let traffic
+#     bypass Traefik and its TLS.
+#   * `container_name` removed; Coolify overrides it.
+services:
+  qr-payment-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "80"
+    restart: unless-stopped
+    environment:
+      - NGINX_ENTRYPOINT_QUIET_LOGS=1
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
