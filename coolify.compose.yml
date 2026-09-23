@@ -8,6 +8,7 @@
 #   * `container_name` removed; Coolify overrides it.
 services:
   qr-payment-app:
+    cpus: 2
     build:
       context: .
       dockerfile: Dockerfile
